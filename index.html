@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>QR Code Generation Using JavaScript</title>
+    <script src="js/lib/qrcode.min.js"></script>
+    <script src="js/scripts/jquery/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+</head>
+
+<script>
+
+    function generateQRCode() {
+        var qrInput = document.getElementById('qrtext');
+        var qrContainer = document.getElementById('qrcode');
+      
+        var qrCode = new QRCode(qrContainer, qrInput.value);
+        qrCode.clear();
+        if(qrInput.value !== '')
+        {
+            qrCode.makeCode(qrInput.value)
+            document.getElementById('qrtext').value = '';
+        }
+        else{
+            alert('Enter valid product Id')
+        }
+       
+        //return generateQRCode;
+    }
+    $(document).ready(function() {
+    $('#download').click(function() { 
+        console.log('called!!!')      
+        html2canvas($("#qrcode"), {
+            onrendered: function(canvas) {         
+                var imgData = canvas.toDataURL(
+                    'image/png');              
+                var doc = new jsPDF('p', 'mm');
+                doc.addImage(imgData, 'PNG', 10, 10);
+                doc.save('sample-file.pdf');
+            }
+        });
+    });
+});
+
+</script>
+
+<body>
+    <div style="margin-left: 30%;">
+            <input id="qrtext" autofocus placeholder="Enter Product ID" value="" />
+            <button class="btn btn-primary" onclick="generateQRCode()">CREATE</button>
+            <button class="btn btn-primary" id='download'>DOWNLOAD</button><br><br>
+            <div id="qrcode"></div>
+    </div>
+    
+
+
+</body>
+
+</html>
